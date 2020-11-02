@@ -81,5 +81,18 @@ public class NumSquare extends JComponent {
         frame.setVisible(true);
     }
 
+
+
+
+    public static void main(String args[]) {
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
+        panel.add(new NumSquare(16));
+        frame.add(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
 }
 
