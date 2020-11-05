@@ -43,6 +43,7 @@ public class GameCode {
                 grid[col][row] = 0;
             }
         }
+        //System.out.println(columns+" "+rows);
     }
 
     /**

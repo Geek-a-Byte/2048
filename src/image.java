@@ -54,6 +54,7 @@ public class image extends JPanel{
         GradientPaint blueToBlack = new GradientPaint(0, 0, c, x+500, y+500, Color.BLACK);
         g2.setPaint(blueToBlack);
         g2.fillRect(0,0,2000,1000);
+//        text color
         g.setColor(Color.white);
         g.drawString("Welcome to ", x, y);
         g.drawImage(img, x, y, this);
@@ -109,4 +110,4 @@ public class image extends JPanel{
 //        frame.setVisible(true);
 //    }
 //}
-//
+
