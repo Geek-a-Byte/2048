@@ -210,7 +210,7 @@ public class GameCode {
         } while (grid[col][row] != 0);
 
         grid[col][row] = 2;
-//        System.out.println(col+" "+row);
+        System.out.println((col-1) +" "+ (row-1));
         return true;
     }
 

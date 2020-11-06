@@ -1,11 +1,9 @@
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
-
 class GameFrame extends JFrame{
     public JPanel panelMain;
     public JLabel two;
@@ -49,7 +47,7 @@ class GameFrame extends JFrame{
               {
                   System.out.println("called");
                   game=new GameCode(3,3);
-                  panelMain.add(NewGame);
+
               }
               if(choice.equals("4x4"))
               {
@@ -83,6 +81,7 @@ class GameFrame extends JFrame{
           panelMain.add(panelGame);
           game.addNew2();
           game.addNew2();
+          System.out.println();
           updateNumSquares();
           panelButton.setLayout(new GridBagLayout());
           GridBagConstraints constraints = new GridBagConstraints();
@@ -95,9 +94,9 @@ class GameFrame extends JFrame{
           constraints.gridx = 5; constraints.gridy = 15;
           panelButton.add(downClick, constraints);
           panelButton.setSize(200,100);
-          Color color=new Color(81, 0, 67);
-          panelButton.setBackground(color);
+          //Color color=new Color(81, 0, 67);
           panelMain.add(panelButton);
+          panelMain.add(NewGame);
           pack();
        }
 
@@ -105,34 +104,35 @@ class GameFrame extends JFrame{
 
         for (int i = 0; i < game.ROWS; i++) {
             for (int j = 0; j < game.COLUMNS; j++) {
-                System.out.printf(game.getCellValue(j,i).value+" ");
+                //System.out.printf(game.getCellValue(j,i).value+" ");
                 panelGame.setValue(i, j, game.getCellValue(j,i));
             }
-            System.out.println();
+            //System.out.println();
         }
         score_int=game.getScore();
-        System.out.println(score_int);
+        //System.out.println(score_int);
         score.setText("Score:  "+ score_int);
         panelGame.repaint();//this line is for repainting the whole grid when a button is clicked.
         if(game.canPlay()==false)
             gameOver();
     }
 
-    public GameFrame() {
+    public GameFrame(int r,int c) {
         super("Game 2048");
         panelMain=new JPanel();
         score=new JLabel();
         score.setPreferredSize(new Dimension(200,40));
         //panelMain.setBackground(Color.black);
-        game= new GameCode(8,8);
+        game= new GameCode(c,r);
         panelGame = new GamePanel(game.ROWS, game.COLUMNS);
         score_int=game.getScore();
-        System.out.println(score_int);
+        //System.out.println(score_int);
         score.setText("Score:  " + score_int);
         NewGame=new JButton("New Game");
         try {
             //create the font to use. Specify the size!
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts2/Portico Stencil Rough.otf")).deriveFont(20f);
+            Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts2/Portico Stencil Rough.otf")).deriveFont(15f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(customFont);
@@ -140,16 +140,40 @@ class GameFrame extends JFrame{
             score.setForeground(Color.WHITE);
             NewGame.setFont(customFont);
             NewGame.setForeground(Color.WHITE);
+            leftClick.setFont(customFont1);
+            leftClick.setForeground(Color.WHITE);
+            rightClick.setFont(customFont1);
+            rightClick.setForeground(Color.WHITE);
+            upClick.setFont(customFont1);
+            upClick.setForeground(Color.WHITE);
+            downClick.setFont(customFont1);
+            downClick.setForeground(Color.WHITE);
+            leftClick.setBackground(Color.black);
+            rightClick.setBackground(Color.black);
+            upClick.setBackground(Color.black);
+            downClick.setBackground(Color.black);
+
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch(FontFormatException e) {
             e.printStackTrace();
         }
-        scorePanel=new JPanel();
-        scorePanel.setPreferredSize(new Dimension(800,50));
+        scorePanel=new JPanel(){
+
+                Color c = new Color(129, 0, 174);
+                protected void paintComponent(Graphics g) {
+                Paint p = new GradientPaint(0.0f, getHeight(), c,
+                        0.0f, 0.0f, Color.BLACK, true);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(p);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+
+        scorePanel.setPreferredSize(new Dimension(200,50));
         scorePanel.setBackground(Color.black);
-        scorePanel.setBorder(new LineBorder(Color.CYAN));
+
         //NewGame
 
         NewGame.setBackground(Color.black);
@@ -165,6 +189,17 @@ class GameFrame extends JFrame{
         //panelGame.setSize(400,400);
         panelMain.add(panelGame);
         panelMain.setLayout(new BoxLayout(panelMain,BoxLayout.Y_AXIS));
+        panelButton=new JPanel(){
+            Color c = new Color(129, 0, 174);
+            protected void paintComponent(Graphics g) {
+                Paint p = new GradientPaint(0.0f, 0.0f, c,
+                        0.0f, getHeight(), Color.BLACK, true);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(p);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+
         panelButton.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0; constraints.gridy = 7;
@@ -175,12 +210,13 @@ class GameFrame extends JFrame{
         panelButton.add(upClick, constraints);
         constraints.gridx = 5; constraints.gridy = 15;
         panelButton.add(downClick, constraints);
-        panelButton.setSize(200,100);
-        Color color=new Color(81, 0, 67);
+        Color color=new Color(49, 28, 74);
         panelButton.setBackground(color);
+        panelButton.setBorder(new EmptyBorder(15,15,15,5));
         panelMain.add(panelButton);
         game.addNew2();
         game.addNew2();
+        System.out.println();
         updateNumSquares();
 
         //left=up
@@ -194,6 +230,7 @@ class GameFrame extends JFrame{
 //                System.out.println("Clicked");
                 game.slideUp();
                 game.addNew2();
+                System.out.println();
                 updateNumSquares();
 
                 //panelGame.repaint();
@@ -207,6 +244,7 @@ class GameFrame extends JFrame{
 //                System.out.println("Clicked");
                 game.slideDown();
                 game.addNew2();
+                System.out.println();
                 updateNumSquares();
 
 
@@ -221,6 +259,7 @@ class GameFrame extends JFrame{
 //                System.out.println("Clicked");
                 game.slideLeft();
                 game.addNew2();
+                System.out.println();
                 updateNumSquares();
 
                 //panelGame.repaint();
@@ -234,6 +273,7 @@ class GameFrame extends JFrame{
 //                System.out.println("Clicked");
                 game.slideRight();
                 game.addNew2();
+                System.out.println();
                 updateNumSquares();
 
 
@@ -253,18 +293,20 @@ class GameFrame extends JFrame{
                 if(e.getKeyCode() == KeyEvent.VK_UP){
                     game.slideLeft();
                     game.addNew2();
+                    System.out.println();
                     updateNumSquares();
-
                     //System.out.println("call");
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_DOWN){
                     game.slideRight();
                     game.addNew2();
+                    System.out.println();
                     updateNumSquares();
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_LEFT){
                     game.slideUp();
                     game.addNew2();
+                    System.out.println();
                     updateNumSquares();
 
                 }
@@ -272,6 +314,7 @@ class GameFrame extends JFrame{
                 {
                     game.slideDown();
                     game.addNew2();
+                    System.out.println();
                     updateNumSquares();
                 }
             }
@@ -281,23 +324,19 @@ class GameFrame extends JFrame{
 
             }
         };
+
         upClick.addKeyListener(anonymous);
         downClick.addKeyListener(anonymous);
         leftClick.addKeyListener(anonymous);
-        downClick.addKeyListener(anonymous);
         panelMain.setBackground(Color.black);
         panelMain.add(NewGame);
-        NewGame.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
+        NewGame.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new GameGridSelector().main(new String[0]);
 
-            GameFrame frame2 = new GameFrame();
-            frame2.add(frame2.panelMain);
-            frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame2.setMinimumSize(new Dimension(700,850));
-            frame2.pack();
-            frame2.setVisible(true);
-
-        }
+            }
         });
 
     }

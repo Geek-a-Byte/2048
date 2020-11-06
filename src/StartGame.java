@@ -2,13 +2,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.time.chrono.JapaneseChronology;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-public class StartGame implements ActionListener
-{
+
+public class StartGame implements ActionListener{
+
     JFrame frame;
 
     public static void main(String args[]) {
@@ -17,13 +16,18 @@ public class StartGame implements ActionListener
     }
 
     public void go() {
+
+
         frame = new JFrame("Game 2048");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MyDrawing drawPanel = new MyDrawing();
         JButton start_gameButton = new JButton("Start Game");
+        JButton start_music_on = new JButton("Sound On");
+        JButton start_music_off = new JButton("Sound Off");
         JPanel rowPanel = new JPanel();
-        JPanel row2Panel = new JPanel();
+        JPanel rowPanel2 = new JPanel();
         rowPanel.setLayout(new FlowLayout());
+        rowPanel2.setLayout(new FlowLayout());
         JLabel name=new JLabel("Enter Your Name: ");
         name.setForeground(Color.WHITE);
         name.setPreferredSize(new Dimension(200,50));
@@ -32,6 +36,9 @@ public class StartGame implements ActionListener
         rowPanel.add( name);
         rowPanel.add( textField );
         rowPanel.setBackground(Color.black);
+        rowPanel2.add( start_music_on );
+        rowPanel2.add(start_music_off );
+        rowPanel2.setBackground(Color.black);
 
         //rowPanel.setSize(1000,100);
         start_gameButton.setBackground(Color.black);
@@ -54,21 +61,27 @@ public class StartGame implements ActionListener
         } catch(FontFormatException e) {
             e.printStackTrace();
         }
-        start_gameButton.addActionListener(this);
+
+        frame.getContentPane().add(BorderLayout.PAGE_START,rowPanel2);
         frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
         frame.getContentPane().add(BorderLayout.PAGE_END,rowPanel);
         frame.setSize(1200, 800);
         frame.setVisible(true);
+
+
+        start_gameButton.addActionListener(this);
         start_gameButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                GameFrame frame2 = new GameFrame();
-                frame2.add(frame2.panelMain);
-                frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame2.setMinimumSize(new Dimension(700,850));
-                frame2.pack();
-                frame2.setVisible(true);
+                 frame.setVisible(false);
+                 new GameGridSelector().main(new String[1]);
+
+//                GameFrame frame2 = new GameFrame();
+//                frame2.add(frame2.panelMain);
+//                frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//                frame2.setPreferredSize(new Dimension(600,850));
+//                frame2.pack();
+//                frame2.setVisible(true);
 
             }
         });

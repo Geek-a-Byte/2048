@@ -5,7 +5,7 @@ import java.awt.*;
 
 class Drive {
     public static void main(String[] args){
-        GameFrame frame = new GameFrame();
+        GameFrame frame = new GameFrame(4,4);
         frame.add(frame.panelMain);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setMinimumSize(new Dimension(650,800));
