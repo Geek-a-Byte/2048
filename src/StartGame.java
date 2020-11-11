@@ -15,9 +15,7 @@ public class StartGame implements ActionListener{
         w.go();
     }
 
-    public void go() {
-
-
+    public void go(){
         frame = new JFrame("Game 2048");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MyDrawing drawPanel = new MyDrawing();
@@ -35,6 +33,18 @@ public class StartGame implements ActionListener{
         textField.setPreferredSize(new Dimension(400,30));
         rowPanel.add( name);
         rowPanel.add( textField );
+        String n;
+//        try {
+//            n=textField.getText();
+//            checkForMissingFields( n);
+//
+//        }
+//        catch ( MissingFieldException e) {
+//            // handle exception
+//
+//            textField.setText(e.getMessage());
+//        }
+
         rowPanel.setBackground(Color.black);
         rowPanel2.add( start_music_on );
         rowPanel2.add(start_music_off );
@@ -76,13 +86,6 @@ public class StartGame implements ActionListener{
                  frame.setVisible(false);
                  new GameGridSelector().main(new String[1]);
 
-//                GameFrame frame2 = new GameFrame();
-//                frame2.add(frame2.panelMain);
-//                frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//                frame2.setPreferredSize(new Dimension(600,850));
-//                frame2.pack();
-//                frame2.setVisible(true);
-
             }
         });
     }
@@ -90,6 +93,10 @@ public class StartGame implements ActionListener{
     public void actionPerformed(ActionEvent event) {
         frame.repaint();
     }
+    public void checkForMissingFields(String n) throws MissingFieldException{
+        System.out.println();
+    }
+
 }
 
 class MyDrawing extends JPanel

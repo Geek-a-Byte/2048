@@ -191,7 +191,7 @@ public class GameGridSelector extends JFrame {
                 GameFrame frame2 = new GameFrame(5,5);
                 frame2.add(frame2.panelMain);
                 frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame2.setPreferredSize(new Dimension(600,850));
+                frame2.setPreferredSize(new Dimension(850,850));
                 frame2.pack();
                 frame2.setVisible(true);
             }
@@ -203,7 +203,7 @@ public class GameGridSelector extends JFrame {
                 GameFrame frame2 = new GameFrame(6,6);
                 frame2.add(frame2.panelMain);
                 frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame2.setPreferredSize(new Dimension(600,850));
+                frame2.setPreferredSize(new Dimension(850,850));
                 frame2.pack();
                 frame2.setVisible(true);
             }
@@ -215,7 +215,7 @@ public class GameGridSelector extends JFrame {
                 GameFrame frame2 = new GameFrame(8,8);
                 frame2.add(frame2.panelMain);
                 frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame2.setPreferredSize(new Dimension(700,1000));
+                frame2.setPreferredSize(new Dimension(850,1000));
                 frame2.pack();
                 frame2.setVisible(true);
             }

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-class GameFrame extends JFrame{
+class GameFrame extends JFrame implements KeyListener {
     public JPanel panelMain;
     public JLabel two;
     public JLabel zero;
@@ -21,8 +21,10 @@ class GameFrame extends JFrame{
     public GameCode game;
     public JPanel scorePanel;
     int score_int;
+    JLabel timerlabel;
+    final int[] count = {0};
 
-      void gameOver(){
+    void gameOver(){
           String[] options={"New Game","Exit"};
           int result = JOptionPane.showOptionDialog(this, "Game over.\nYour score was " + game.getScore(), "Game Over!",
                   JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
@@ -37,29 +39,23 @@ class GameFrame extends JFrame{
 
       }
       void newGame(){
-          String[] options={ "3x3", "4x4", "5x5","6x6","10x10"};
+          String[] options={ "4x4", "5x5", "6x6","8x8"};
           String choice = (String)JOptionPane.showInputDialog(this, "What size game field?", "New Game",
                   JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
           if(choice==null)
               return;
           else {
-              if(choice.equals("3x3"))
-              {
-                  System.out.println("called");
-                  game=new GameCode(3,3);
-
-              }
               if(choice.equals("4x4"))
               {
                   System.out.println("called");
                   game=new GameCode(4,4);
-
 
               }
               if(choice.equals("5x5"))
               {
                   System.out.println("called");
                   game=new GameCode(5,5);
+
 
               }
               if(choice.equals("6x6"))
@@ -68,17 +64,19 @@ class GameFrame extends JFrame{
                   game=new GameCode(6,6);
 
               }
-              if(choice.equals("10x10"))
+              if(choice.equals("8x8"))
               {
                   System.out.println("called");
-                  game=new GameCode(10,10);
+                  game=new GameCode(8,8);
 
               }
           }
           panelGame.removeAll();
           panelButton.removeAll();
           panelGame = new GamePanel(game.ROWS, game.COLUMNS);
+          panelMain.add(scorePanel);
           panelMain.add(panelGame);
+          count[0]++;
           game.addNew2();
           game.addNew2();
           System.out.println();
@@ -94,9 +92,7 @@ class GameFrame extends JFrame{
           constraints.gridx = 5; constraints.gridy = 15;
           panelButton.add(downClick, constraints);
           panelButton.setSize(200,100);
-          //Color color=new Color(81, 0, 67);
           panelMain.add(panelButton);
-          panelMain.add(NewGame);
           pack();
        }
 
@@ -113,22 +109,91 @@ class GameFrame extends JFrame{
         //System.out.println(score_int);
         score.setText("Score:  "+ score_int);
         panelGame.repaint();//this line is for repainting the whole grid when a button is clicked.
-        if(game.canPlay()==false)
+        if(game.canPlay()==false) {
             gameOver();
+
+        }
     }
 
+    @Override
+
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        {
+            if (code == KeyEvent.VK_DOWN) {
+                game.slideRight();
+                game.addNew2();
+                updateNumSquares();
+
+            }
+            if (code == KeyEvent.VK_UP) {
+                game.slideLeft();
+                game.addNew2();
+                updateNumSquares(); // same goes for here
+
+            }
+            if (code == KeyEvent.VK_LEFT) {
+
+                game.slideUp();
+                game.addNew2();
+                updateNumSquares();
+            }
+            if (code == KeyEvent.VK_RIGHT) {
+
+                    game.slideDown();
+                    game.addNew2();
+                    updateNumSquares();
+
+                }
+
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+
     public GameFrame(int r,int c) {
+
         super("Game 2048");
-        panelMain=new JPanel();
-        score=new JLabel();
-        score.setPreferredSize(new Dimension(200,40));
-        //panelMain.setBackground(Color.black);
         game= new GameCode(c,r);
         panelGame = new GamePanel(game.ROWS, game.COLUMNS);
+        timerlabel=new JLabel();
+        timerlabel.setForeground(Color.WHITE);
+        Timer timer;
+        timer = new Timer(900, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                count[0]++;
+                if (game.canPlay()==true) {
+                    timerlabel.setText("Time taken (seconds)  : "+Integer.toString(count[0]));
+
+                } else {
+                    ((Timer) (e.getSource())).stop();
+                    count[0]=0;
+                    timerlabel.setText("Time taken (seconds)  : "+Integer.toString(count[0]));
+                }
+            }
+        });
+        timer.setInitialDelay(0);
+        timer.start();
+        panelMain=new JPanel();
+        panelMain.add(timerlabel);
+        score=new JLabel();
+        score.setPreferredSize(new Dimension(200,40));
+
         score_int=game.getScore();
-        //System.out.println(score_int);
         score.setText("Score:  " + score_int);
         NewGame=new JButton("New Game");
+
+
         try {
             //create the font to use. Specify the size!
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts2/Portico Stencil Rough.otf")).deriveFont(20f);
@@ -136,6 +201,7 @@ class GameFrame extends JFrame{
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(customFont);
+            timerlabel.setFont(customFont1);
             score.setFont(customFont);
             score.setForeground(Color.WHITE);
             NewGame.setFont(customFont);
@@ -180,9 +246,24 @@ class GameFrame extends JFrame{
         NewGame.setForeground(Color.WHITE);
         NewGame.setFocusPainted(false);
         NewGame.setPreferredSize(new Dimension(200,40));
-        //scorePanel.add(NewGame);
+        scorePanel.add(NewGame);
+
+        NewGame.setFocusable(false);//this line is necessary for the keylisteners to work properly after the game starts
+
+        leftClick.addKeyListener(this);
+        rightClick.addKeyListener(this);
+        upClick.addKeyListener(this);
+        downClick.addKeyListener(this);
+        //NewGame.addMouseListener(this);
+        NewGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new GameGridSelector().main(new String[0]);
+            }
+        });
+
         scorePanel.add(score);
-//        scorePanel.add(NewGame);
         panelMain.add(scorePanel);
 
         //panelMain.add(score);
@@ -218,129 +299,11 @@ class GameFrame extends JFrame{
         game.addNew2();
         System.out.println();
         updateNumSquares();
-
         //left=up
         //right=>down
         //down=>right
         //up=>left;
-        leftClick.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-//                System.out.println("Clicked");
-                game.slideUp();
-                game.addNew2();
-                System.out.println();
-                updateNumSquares();
-
-                //panelGame.repaint();
-
-            }
-        });
-        rightClick.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-//                System.out.println("Clicked");
-                game.slideDown();
-                game.addNew2();
-                System.out.println();
-                updateNumSquares();
-
-
-                //panelGame.repaint();
-
-            }
-        });
-        upClick.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-//                System.out.println("Clicked");
-                game.slideLeft();
-                game.addNew2();
-                System.out.println();
-                updateNumSquares();
-
-                //panelGame.repaint();
-
-            }
-        });
-        downClick.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-//                System.out.println("Clicked");
-                game.slideRight();
-                game.addNew2();
-                System.out.println();
-                updateNumSquares();
-
-
-                //panelGame.repaint();
-            }
-        });
-
-
-        KeyListener anonymous= new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_UP){
-                    game.slideLeft();
-                    game.addNew2();
-                    System.out.println();
-                    updateNumSquares();
-                    //System.out.println("call");
-                }
-                else if(e.getKeyCode() == KeyEvent.VK_DOWN){
-                    game.slideRight();
-                    game.addNew2();
-                    System.out.println();
-                    updateNumSquares();
-                }
-                else if(e.getKeyCode() == KeyEvent.VK_LEFT){
-                    game.slideUp();
-                    game.addNew2();
-                    System.out.println();
-                    updateNumSquares();
-
-                }
-                else
-                {
-                    game.slideDown();
-                    game.addNew2();
-                    System.out.println();
-                    updateNumSquares();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        };
-
-        upClick.addKeyListener(anonymous);
-        downClick.addKeyListener(anonymous);
-        leftClick.addKeyListener(anonymous);
         panelMain.setBackground(Color.black);
-        panelMain.add(NewGame);
-        NewGame.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                new GameGridSelector().main(new String[0]);
-
-            }
-        });
 
     }
-
-
-
 }

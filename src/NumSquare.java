@@ -2,19 +2,39 @@ import sun.plugin2.util.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 public class NumSquare extends JComponent {
     static final int Scale =100;
     static final int Border =Scale/20;
     static final int Font_size =(int)(Scale*0.4);
+
+
     //static final Font FONT =new Font("Consolas",Font.PLAIN,28);
     static final Font FONT =new Font("OpenSans",Font.PLAIN,28);
     public int value;
     int h,w;
     public NumSquare(int val){
+        try {
+            //create the font to use. Specify the size!
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts2/Portico Stencil Rough.otf")).deriveFont(28f);
+            //Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts2/ONEDAY.otf")).deriveFont(25f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            //register the font
+            ge.registerFont(customFont);
+            this.setFont(customFont);
+
+
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+        } catch(FontFormatException e) {
+            e.printStackTrace();
+        }
         this.value=val;
-        this.setFont(FONT);
+
         this.setPreferredSize(new Dimension(Scale,Scale));
     }
     public void setValue(int val){
