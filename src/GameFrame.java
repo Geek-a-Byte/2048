@@ -2,7 +2,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 class GameFrame extends JFrame implements KeyListener {
     public JPanel panelMain;
@@ -56,7 +58,6 @@ class GameFrame extends JFrame implements KeyListener {
                   System.out.println("called");
                   game=new GameCode(5,5);
 
-
               }
               if(choice.equals("6x6"))
               {
@@ -109,9 +110,23 @@ class GameFrame extends JFrame implements KeyListener {
         //System.out.println(score_int);
         score.setText("Score:  "+ score_int);
         panelGame.repaint();//this line is for repainting the whole grid when a button is clicked.
-        if(game.canPlay()==false) {
+        if(game.canPlay()==false)
+        {
+            String a = Integer.toString(score_int);
+            File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+            try
+            {
+                FileWriter fw = new FileWriter(file,true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(","+a);
+                bw.newLine();
+                bw.close();
+            }
+            catch (IOException ioException)
+            {
+                ioException.printStackTrace();
+            }
             gameOver();
-
         }
     }
 
@@ -163,6 +178,60 @@ class GameFrame extends JFrame implements KeyListener {
     public GameFrame(int r,int c) {
 
         super("Game 2048");
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                String[] options={"New Game","Exit"};
+                int result = JOptionPane.showOptionDialog(null, "Game over.\nYour score was " + game.getScore(), "Game Over!",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                String a = Integer.toString(score_int);
+                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+                try
+                {
+                    FileWriter fw = new FileWriter(file,true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(","+a);
+                    bw.newLine();
+                    bw.close();
+                }
+                catch (IOException ioException)
+                {
+                    ioException.printStackTrace();
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
         game= new GameCode(c,r);
         panelGame = new GamePanel(game.ROWS, game.COLUMNS);
         timerlabel=new JLabel();

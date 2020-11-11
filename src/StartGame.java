@@ -1,6 +1,9 @@
+import com.opencsv.CSVWriter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -83,8 +86,35 @@ public class StartGame implements ActionListener{
         start_gameButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e) {
-                 frame.setVisible(false);
-                 new GameGridSelector().main(new String[1]);
+
+
+                String arr = textField.getText();
+                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+
+                try
+                {
+                    FileWriter fw = new FileWriter(file,true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    //bw.newLine();
+                    if(arr.equals(""))
+                    {
+                        //textField.setText("Please Enter Your Name First");
+                        throw new nameNotPresentException("Name Not Present");
+                    }
+                    bw.write(arr);
+                    bw.close();
+                    frame.setVisible(false);
+                    new GameGridSelector().main(new String[1]);
+                }
+                catch (IOException ioException)
+                {
+                    ioException.printStackTrace();
+                }
+                catch(nameNotPresentException e1)
+                {
+                    System.out.println("error "+ e1.getMessage());
+                    JOptionPane.showMessageDialog(null,"Enter Your Name First","Warning",JOptionPane.WARNING_MESSAGE);
+                }
 
             }
         });
@@ -93,9 +123,7 @@ public class StartGame implements ActionListener{
     public void actionPerformed(ActionEvent event) {
         frame.repaint();
     }
-    public void checkForMissingFields(String n) throws MissingFieldException{
-        System.out.println();
-    }
+
 
 }
 
