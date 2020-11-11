@@ -1,8 +1,12 @@
+import com.opencsv.CSVWriter;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 
@@ -110,21 +114,100 @@ class GameFrame extends JFrame{
             }
             System.out.println();
         }
+//        if(game.getScore() != 0)
+//        {
+//
+//        }
+//        else
+//        {
+//            score_int = 0;
+//        }
         score_int=game.getScore();
         System.out.println(score_int);
         score.setText("Score:  "+ score_int);
         panelGame.repaint();//this line is for repainting the whole grid when a button is clicked.
         if(game.canPlay()==false)
+        {
+            String a = Integer.toString(score_int);
+            File file = new File("D:/2048-Nawreen/Leaderboard1.csv");
+            try
+            {
+                FileWriter fw = new FileWriter(file,true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(","+a);
+                bw.newLine();
+                bw.close();
+            }
+            catch (IOException ioException)
+            {
+                ioException.printStackTrace();
+            }
             gameOver();
+        }
+
     }
 
     public GameFrame() {
         super("Game 2048");
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                String[] options={"New Game","Exit"};
+                int result = JOptionPane.showOptionDialog(null, "Game over.\nYour score was " + game.getScore(), "Game Over!",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                String a = Integer.toString(score_int);
+                File file = new File("D:/2048-Nawreen/Leaderboard1.csv");
+                try
+                {
+                    FileWriter fw = new FileWriter(file,true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(","+a);
+                    bw.newLine();
+                    bw.close();
+                }
+                catch (IOException ioException)
+                {
+                    ioException.printStackTrace();
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
         panelMain=new JPanel();
         score=new JLabel();
         score.setPreferredSize(new Dimension(200,40));
         //panelMain.setBackground(Color.black);
-        game= new GameCode(8,8);
+        game= new GameCode(4,4);
         panelGame = new GamePanel(game.ROWS, game.COLUMNS);
         score_int=game.getScore();
         System.out.println(score_int);

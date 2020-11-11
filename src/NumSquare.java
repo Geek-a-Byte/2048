@@ -1,5 +1,3 @@
-import sun.plugin2.util.ColorUtil;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;

@@ -1,8 +1,13 @@
+import com.opencsv.CSVWriter;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.chrono.JapaneseChronology;
+import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -29,6 +34,7 @@ public class StartGame implements ActionListener
         name.setPreferredSize(new Dimension(200,50));
         JTextField textField=new JTextField();
         textField.setPreferredSize(new Dimension(400,30));
+
         rowPanel.add( name);
         rowPanel.add( textField );
         rowPanel.setBackground(Color.black);
@@ -55,6 +61,7 @@ public class StartGame implements ActionListener
             e.printStackTrace();
         }
         start_gameButton.addActionListener(this);
+
         frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
         frame.getContentPane().add(BorderLayout.PAGE_END,rowPanel);
         frame.setSize(1200, 800);
@@ -62,11 +69,27 @@ public class StartGame implements ActionListener
         start_gameButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e) {
+
                 frame.setVisible(false);
+                String arr = textField.getText();
+                File file = new File("D:/2048-Nawreen/Leaderboard1.csv");
+
+                try
+                {
+                    FileWriter fw = new FileWriter(file,true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    //bw.newLine();
+                    bw.write(arr);
+                    bw.close();
+                }
+                catch (IOException ioException)
+                {
+                    ioException.printStackTrace();
+                }
                 GameFrame frame2 = new GameFrame();
                 frame2.add(frame2.panelMain);
                 frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame2.setMinimumSize(new Dimension(700,850));
+                frame2.setPreferredSize(new Dimension(550,750));
                 frame2.pack();
                 frame2.setVisible(true);
 
@@ -81,7 +104,7 @@ public class StartGame implements ActionListener
 
 class MyDrawing extends JPanel
 {
-    private Image img = new ImageIcon("C:/Users/USER/Desktop/2-2/2048/2048 gif2.gif").getImage();
+    private Image img = new ImageIcon("D:/2048-Nawreen/2048 gif2.gif").getImage();
 
 
     public void paintComponent(Graphics g){
@@ -97,9 +120,12 @@ class MyDrawing extends JPanel
             ge.registerFont(customFont);
             g.setFont(customFont);
 
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-        } catch(FontFormatException e) {
+        } catch(FontFormatException e)
+        {
             e.printStackTrace();
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -115,7 +141,8 @@ class MyDrawing extends JPanel
     }
 
     @Override
-    public Dimension getPreferredSize(){
+    public Dimension getPreferredSize()
+    {
         return new Dimension(img.getWidth(null)+400, img.getHeight(null)+400);
     }
 }
