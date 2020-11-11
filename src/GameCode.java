@@ -4,34 +4,8 @@ public class GameCode {
 
     public int COLUMNS;
     public int ROWS;
-    /** Grid holds the array of game numbers.
-     * It is 2 elements larger than COLUMNS and ROWS in order to be
-     16
-     * surrounded by a ring of extra zeroes.
-     * <p>This ring of zeroes mostly just simplifies canPlay().</p> */
     private final int[][] grid;
 
-    /**
-     * printGame() will print out the contents of the internal table
-     * to stdOut, representing the current game state.
-     */
-    public void printGame() {
-        for (int row = 1; row <= ROWS; row++) {
-            for (int col = 1; col <= COLUMNS; col++) {
-                System.out.printf("%d\t", grid[col][row]);
-            }
-            System.out.println();
-        }
-    }
-
-    /**
-     * Initialize a new game of the given dimensions.
-     * Once set, the dimensions cannot be modified.
-     *
-     * @param columns The number of columns in the game grid.
-     * @param rows The number of rows in the game grid.
-     * @throws IllegalArgumentException Thrown if rows or columns are < 2
-     */
     public GameCode(final int columns, final int rows) throws IllegalArgumentException {
         if (columns < 2 || rows < 2)
             throw new IllegalArgumentException("Rows and columns must both be >= 2.");
@@ -46,14 +20,6 @@ public class GameCode {
         //System.out.println(columns+" "+rows);
     }
 
-    /**
-     * Get the value of a particular cell in the 2D game grid array.
-     *
-     * @param col The column to query in the game grid.
-     * @param row The row to query in the game grid.
-     * @return The value of the given array cell.
-     * @throws IndexOutOfBoundsException If the row or column is outside the game range.
-     */
     public NumSquare getCellValue(int col, int row) throws IndexOutOfBoundsException {
         if (col < 0 || col >= COLUMNS || row < 0 || row >= ROWS)
             throw new IndexOutOfBoundsException();
@@ -62,27 +28,8 @@ public class GameCode {
         return num;
     }
 
-    /**
-     * Set the value of a particular cell in the 2D game grid array.
-     *
-     * @param col The column to target in the game grid.
-     * @param row The row to target in the game grid.
-     *
-     * @throws IndexOutOfBoundsException If the row or column is outside the game range.
-     */
-    public void setCellValue(int col, int row, int value) throws IndexOutOfBoundsException {
-        if (col < 0 || col >= COLUMNS || row < 0 || row >= ROWS)
-            throw new IndexOutOfBoundsException();
-        grid[col+1][row+1] = value;
-    }
 
-    /**
-     * Push all grid values to the left, filling in empty squares (0s).
-     * If two equal numbers are pushed together,
-     * they will combine to a larger number, double the size.
-     */
-
-    public void slideLeft() {
+    public void slideUp() {
         int destCol;
         for (int row = 1; row <= ROWS; row++) {
             destCol = 1;
@@ -105,12 +52,7 @@ public class GameCode {
         }
     }
 
-    /**
-     * Push all grid values to the right, filling in empty squares (0s).
-     * If two equal numbers are pushed together,
-     * they will combine to a larger number, double the size.
-     */
-    public void slideRight() {
+    public void slideDown() {
         int destCol;
         for (int row = 1; row <= ROWS; row++) {
             destCol = COLUMNS;
@@ -133,12 +75,8 @@ public class GameCode {
         }
     }
 
-    /**
-     * Push all grid values to the top, filling in empty squares (0s).
-     * If two equal numbers are pushed together,
-     * they will combine to a larger number, double the size.
-     */
-    public void slideUp() {
+
+    public void slideLeft() {
         int destRow;
         for (int column = 1; column <= COLUMNS; column++) {
             destRow = 1;
@@ -161,12 +99,7 @@ public class GameCode {
         }
     }
 
-    /**
-     * Push all grid values to the bottom, filling in empty squares (0s).
-     * If two equal numbers are pushed together,
-     * they will combine to a larger number, double the size.
-     */
-    public void slideDown() {
+    public void slideRight() {
         int destRow;
         for (int column = 1; column <= COLUMNS; column++) {
             destRow = ROWS;
@@ -189,12 +122,7 @@ public class GameCode {
         }
     }
 
-    /**
-     * Place a new 2 at a random empty place in the game grid.
-     * An empty place is any cell with a value of 0
-     *
-     * @return
-     */
+
     public boolean addNew2() {
         int col;
         int row;
@@ -214,11 +142,6 @@ public class GameCode {
         return true;
     }
 
-    /**
-     * Determine if there are any possible moves left.
-     *
-     * @return True if there are empty spaces or it is possible to combine two cells
-     */
     public boolean canPlay() {
         if (!isFull())
             return true;
@@ -235,11 +158,6 @@ public class GameCode {
         return false;
     }
 
-    /**
-     * Tally the values of all cells in the game grid.
-     *
-     * @return The sum of all cells in the game grid.
-     */
     public int getScore() {
         int score = 0;
         for (int col = 1; col <= COLUMNS; col++) {
@@ -250,11 +168,6 @@ public class GameCode {
         return score;
     }
 
-    /**
-     * Check if the game grid is full (i.e. there are no more empty spaces or zeroes.)
-     *
-     * @return True if there is no more empty (0) cells in the game grid.
-     */
     public boolean isFull() {
         for (int column = 1; column <= COLUMNS; column++) {
             for (int row = 1; row <= ROWS; row++) {

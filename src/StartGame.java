@@ -1,34 +1,76 @@
 import com.opencsv.CSVWriter;
+import javafx.scene.media.MediaPlayer;
+
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+import javax.print.attribute.standard.Media;
+import javax.sound.sampled.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 
 public class StartGame implements ActionListener{
 
     JFrame frame;
+    JButton scoreBoard=new JButton();
 
-    public static void main(String args[]) {
+
+
+    public static void main(String args[]) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         StartGame w = new StartGame();
         w.go();
+
     }
 
-    public void go(){
+    public void go() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        Clip clip = AudioSystem.getClip();
+        clip.open(AudioSystem.getAudioInputStream(new File("Marshmello_-_Summer_Official_Music_Video_with_Lele_Pons (online-audio-converter.com).wav")));
+
         frame = new JFrame("Game 2048");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MyDrawing drawPanel = new MyDrawing();
         JButton start_gameButton = new JButton("Start Game");
-        JButton start_music_on = new JButton("Sound On");
-        JButton start_music_off = new JButton("Sound Off");
+        JButton start_music_on = new JButton();
+        JButton start_music_off = new JButton();
+        start_music_on.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    clip.start();
+                }
+                catch (Exception exc)
+                {
+                    exc.printStackTrace(System.out);
+                }
+            }
+        });
+        start_music_off.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    clip.stop();
+                }
+                catch (Exception exc)
+                {
+                    exc.printStackTrace(System.out);
+                }
+            }
+        });
         JPanel rowPanel = new JPanel();
         JPanel rowPanel2 = new JPanel();
         rowPanel.setLayout(new FlowLayout());
-        rowPanel2.setLayout(new FlowLayout());
+        rowPanel2.setLayout(new GridLayout(2,1,0,20));
         JLabel name=new JLabel("Enter Your Name: ");
         name.setForeground(Color.WHITE);
         name.setPreferredSize(new Dimension(200,50));
@@ -74,22 +116,39 @@ public class StartGame implements ActionListener{
         } catch(FontFormatException e) {
             e.printStackTrace();
         }
-
         frame.getContentPane().add(BorderLayout.PAGE_START,rowPanel2);
+        try {
+            //Image img = ImageIO.read(getClass().getResource("C:/Users/USER/Desktop/2-2/2048/42226.jpg"));
+            Image img =ImageIO.read(new File("C:/Users/USER/Desktop/2-2/2048/42226.jpg"));
+            Image img2 =ImageIO.read(new File("C:/Users/USER/Desktop/2-2/2048/music on.jpg"));
+            Image img3 =ImageIO.read(new File("C:/Users/USER/Desktop/2-2/2048/pause.jpg"));
+            Image newimg  = img.getScaledInstance(150, 150,  java.awt.Image.SCALE_SMOOTH);
+            Image newimg2  = img2.getScaledInstance(150, 150,  java.awt.Image.SCALE_SMOOTH);
+            Image newimg3  = img3.getScaledInstance(150, 150,  java.awt.Image.SCALE_SMOOTH);
+            scoreBoard.setIcon(new ImageIcon(newimg));
+            start_music_on.setIcon(new ImageIcon(newimg2));
+            start_music_off.setIcon(new ImageIcon(newimg3));
+
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        rowPanel2.setBackground(Color.BLACK);
+        scoreBoard.setBackground(Color.BLACK);
+        start_music_off.setBackground(Color.BLACK);
+        start_music_on.setBackground(Color.BLACK);
+        frame.getContentPane().add(BorderLayout.EAST,scoreBoard);
+        frame.getContentPane().add(BorderLayout.WEST,rowPanel2);
         frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
         frame.getContentPane().add(BorderLayout.PAGE_END,rowPanel);
         frame.setSize(1200, 800);
         frame.setVisible(true);
-
-
         start_gameButton.addActionListener(this);
         start_gameButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e) {
 
-
                 String arr = textField.getText();
-                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
 
                 try
                 {
@@ -115,6 +174,15 @@ public class StartGame implements ActionListener{
                     System.out.println("error "+ e1.getMessage());
                     JOptionPane.showMessageDialog(null,"Enter Your Name First","Warning",JOptionPane.WARNING_MESSAGE);
                 }
+
+            }
+        });
+        scoreBoard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                new LBoard().main(new String[1]);
+                frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
             }
         });

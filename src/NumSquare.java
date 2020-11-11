@@ -34,6 +34,7 @@ public class NumSquare extends JComponent {
             e.printStackTrace();
         }
         this.value=val;
+        //this.value=2048;
 
         this.setPreferredSize(new Dimension(Scale,Scale));
     }
@@ -64,7 +65,9 @@ public class NumSquare extends JComponent {
             //color=new Color(242, 173, 93);
             //System.out.println("this value: "+this.value);
 
-        } else if(this.value>0){
+        }
+
+        if(this.value>0){
             //System.out.println("else");
             int len = Integer.numberOfTrailingZeros(value);
             //color = Color.getHSBColor(len / 8.0f, 0.0f, 0.5f);
@@ -72,7 +75,12 @@ public class NumSquare extends JComponent {
             //color=new Color(60, 7, 130);
             //color= Color.getHSBColor((float)Math.random(), 0.9f, 0.8f );
             color=randomColor;
+//            if(this.value==2048){
+//                JOptionPane.showMessageDialog(null,"You've win!","Congratulations!",JOptionPane.INFORMATION_MESSAGE);
+//            }
         }
+
+
         g.setColor(color);
         g.fillRoundRect(5,5,w-10,h-10,Scale/4,Scale/4);
         FontMetrics metrics=getFontMetrics(FONT);

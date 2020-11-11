@@ -25,6 +25,7 @@ class GameFrame extends JFrame implements KeyListener {
     int score_int;
     JLabel timerlabel;
     final int[] count = {0};
+    int flag=1;
 
     void gameOver(){
           String[] options={"New Game","Exit"};
@@ -77,7 +78,6 @@ class GameFrame extends JFrame implements KeyListener {
           panelGame = new GamePanel(game.ROWS, game.COLUMNS);
           panelMain.add(scorePanel);
           panelMain.add(panelGame);
-          count[0]++;
           game.addNew2();
           game.addNew2();
           System.out.println();
@@ -95,6 +95,7 @@ class GameFrame extends JFrame implements KeyListener {
           panelButton.setSize(200,100);
           panelMain.add(panelButton);
           pack();
+
        }
 
     void updateNumSquares () {
@@ -103,6 +104,11 @@ class GameFrame extends JFrame implements KeyListener {
             for (int j = 0; j < game.COLUMNS; j++) {
                 //System.out.printf(game.getCellValue(j,i).value+" ");
                 panelGame.setValue(i, j, game.getCellValue(j,i));
+                if(game.getCellValue(j,i).value==2048 && flag==1)
+                {
+                    JOptionPane.showMessageDialog(null,"You've win!","Congratulations!",JOptionPane.INFORMATION_MESSAGE);
+                    flag=0;
+                }
             }
             //System.out.println();
         }
@@ -113,7 +119,7 @@ class GameFrame extends JFrame implements KeyListener {
         if(game.canPlay()==false)
         {
             String a = Integer.toString(score_int);
-            File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+            File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
             try
             {
                 FileWriter fw = new FileWriter(file,true);
@@ -141,26 +147,26 @@ class GameFrame extends JFrame implements KeyListener {
 
         {
             if (code == KeyEvent.VK_DOWN) {
-                game.slideRight();
+                game.slideDown();
                 game.addNew2();
                 updateNumSquares();
 
             }
             if (code == KeyEvent.VK_UP) {
-                game.slideLeft();
+                game.slideUp();
                 game.addNew2();
                 updateNumSquares(); // same goes for here
 
             }
             if (code == KeyEvent.VK_LEFT) {
 
-                game.slideUp();
+                game.slideLeft();
                 game.addNew2();
                 updateNumSquares();
             }
             if (code == KeyEvent.VK_RIGHT) {
 
-                    game.slideDown();
+                    game.slideRight();
                     game.addNew2();
                     updateNumSquares();
 
@@ -186,12 +192,10 @@ class GameFrame extends JFrame implements KeyListener {
 
             @Override
             public void windowClosing(WindowEvent e) {
-
-                String[] options={"New Game","Exit"};
-                int result = JOptionPane.showOptionDialog(null, "Game over.\nYour score was " + game.getScore(), "Game Over!",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                String[] options={"Exit"};
+                JOptionPane.showMessageDialog(null,"You're Score was "+game.getScore(),"Game Over!",JOptionPane.INFORMATION_MESSAGE);
                 String a = Integer.toString(score_int);
-                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
                 try
                 {
                     FileWriter fw = new FileWriter(file,true);
@@ -371,7 +375,7 @@ class GameFrame extends JFrame implements KeyListener {
         //left=up
         //right=>down
         //down=>right
-        //up=>left;
+        //up=>left
         panelMain.setBackground(Color.black);
 
     }

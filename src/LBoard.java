@@ -1,25 +1,25 @@
 import javafx.scene.input.DataFormat;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.*;
 import java.util.*;
+import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
+
 public class LBoard extends JPanel {
     private final JTable table;
-    public  int c=0;
-    public LBoard() {
 
+
+    public LBoard() {
         super(new BorderLayout(3, 3));
         this.table = new JTable(new MyModel());
         this.table.setPreferredScrollableViewportSize(new Dimension(700, 300));
@@ -35,11 +35,30 @@ public class LBoard extends JPanel {
         CSVFile Rd = new CSVFile();
         MyModel NewModel = new MyModel();
         this.table.setModel(NewModel);
-        File DataFile = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1");
+        File DataFile = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
         ArrayList<String[]> Rs2 = Rd.ReadCSVfile(DataFile);
         NewModel.AddCSVData(Rs2);
         System.out.println("Rows: " + NewModel.getRowCount());
         System.out.println("Cols: " + NewModel.getColumnCount());
+        try {
+            //create the font to use. Specify the size!
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts2/Portico Stencil Rough.otf")).deriveFont(20f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            //register the font
+            ge.registerFont(customFont);
+            table.setFont(customFont);
+            table.getTableHeader().setFont(customFont);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch(FontFormatException e) {
+            e.printStackTrace();
+        }
+        table.getTableHeader().setBackground(Color.BLACK);
+        table.getTableHeader().setForeground(Color.white);
+        table.setForeground(Color.WHITE);
+        table.setBackground(Color.BLACK);
+
     }
 
     // Method for reading CSV file
@@ -49,26 +68,37 @@ public class LBoard extends JPanel {
 
         public ArrayList<String[]> ReadCSVfile(File DataFile)
         {
+            String csvFile = "C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv";
+            String line = "";
+            String cvsSplitBy = ",";
+            List<List<String>> llp = new ArrayList<>();
             try
             {
 
-//                List<ArrayList<String>> csvLines = new ArrayList<ArrayList<String>>();
-//                Comparator<ArrayList<String>> comp = new Comparator<ArrayList<String>>()
-//                {
-//                    public int compare(ArrayList<String> csvLine1, ArrayList<String> csvLine2) {
-//                        return Integer.valueOf(csvLine1.get(2)).compareTo(Integer.valueOf(csvLine2.get(2)));
-//                    }
-//                };
-//                Collections.sort(csvLines, comp);
-
                 BufferedReader brd = new BufferedReader(new FileReader(DataFile));
-                while (brd.ready())
+                while ((line = brd.readLine()) != null) {
+                    llp.add(Arrays.asList(line.split(cvsSplitBy)));
+                }
+                llp.sort(new Comparator<List<String>>() {
+                    @Override
+                    public int compare(List<String> o1, List<String> o2)
+                    {
+                        int a =Integer.parseInt(o2.get(1));
+                        int b =Integer.parseInt(o1.get(1));
+                        return Integer.compare(a, b);
+                    }
+                });
+                System.out.println(llp);
+                for (int k = 0; k < llp.size(); k++)
                 {
-
-                    String st = brd.readLine();
-                    OneRow = st.split(",");
+                    String str = llp.get(k).toString()
+                            .replace("[", "") //remove the right bracket
+                            .replace("]", "") //remove the left bracket
+                            .trim();
+                    OneRow = str.split(",");
                     Rs.add(OneRow);
-                    System.out.println(Arrays.toString(OneRow));
+                    table.setRowHeight(35);
+
                 }
 
             }
@@ -81,12 +111,26 @@ public class LBoard extends JPanel {
         }
     }
 
+
+
     private static void createAndShowGUI() {
+
         // Create and set up the window.
         JFrame frame = new JFrame("Leader Board");
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Create and set up the content pane.
-        LBoard newContentPane = new LBoard();
+        LBoard newContentPane = new LBoard(){
+            Color c = new Color(129, 0, 174);
+            protected void paintComponent(Graphics g) {
+                Paint p = new GradientPaint(getWidth(), getHeight(), c,
+                        0.0f, 0.0f,Color.BLACK, true);
+                Graphics2D g2d = (Graphics2D)g;
+                g2d.setPaint(p);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        newContentPane.setBorder(new EmptyBorder(50,30,50,30));
         frame.setContentPane(newContentPane);
         // Display the window.
         frame.pack();
