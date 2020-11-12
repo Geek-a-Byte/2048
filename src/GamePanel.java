@@ -26,24 +26,6 @@ import java.awt.*;
            numbers[i][j].setValue(cellValue.value);
 
        }
-
-//       //public Object getValue(int i, int j) {
-//           return numbers[i][j];
-//       }
-
-
-//       public static void main(String args[]) {
-//           JFrame frame = new JFrame();
-//           GamePanel panel = new GamePanel(6,6);
-//           frame.add(panel);
-//           frame.setSize(400,400);
-//           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//           frame.pack();
-//           frame.setVisible(true);
-//       }
-
-
-
    }
 
 

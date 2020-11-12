@@ -5,7 +5,6 @@ public class GameCode {
     public int COLUMNS;
     public int ROWS;
     private final int[][] grid;
-
     public GameCode(final int columns, final int rows) throws IllegalArgumentException {
         if (columns < 2 || rows < 2)
             throw new IllegalArgumentException("Rows and columns must both be >= 2.");
@@ -17,8 +16,9 @@ public class GameCode {
                 grid[col][row] = 0;
             }
         }
-        //System.out.println(columns+" "+rows);
+
     }
+
 
     public NumSquare getCellValue(int col, int row) throws IndexOutOfBoundsException {
         if (col < 0 || col >= COLUMNS || row < 0 || row >= ROWS)
@@ -27,7 +27,6 @@ public class GameCode {
         NumSquare num=new NumSquare(i);
         return num;
     }
-
 
     public void slideUp() {
         int destCol;
@@ -75,7 +74,6 @@ public class GameCode {
         }
     }
 
-
     public void slideLeft() {
         int destRow;
         for (int column = 1; column <= COLUMNS; column++) {
@@ -122,7 +120,6 @@ public class GameCode {
         }
     }
 
-
     public boolean addNew2() {
         int col;
         int row;
@@ -138,7 +135,7 @@ public class GameCode {
         } while (grid[col][row] != 0);
 
         grid[col][row] = 2;
-        System.out.println((col-1) +" "+ (row-1));
+//        System.out.println(col+" "+row);
         return true;
     }
 

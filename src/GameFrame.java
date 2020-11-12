@@ -1,3 +1,7 @@
+import javafx.stage.PopupWindow;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -8,18 +12,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 class GameFrame extends JFrame implements KeyListener {
     public JPanel panelMain;
-    public JLabel two;
-    public JLabel zero;
-    public JLabel four;
-    public JLabel eight;
     public JLabel score;
     public JPanel panelButton;
     public GamePanel panelGame;
     public JButton NewGame;
-    public JButton leftClick;
-    public JButton downClick;
-    public JButton upClick;
-    public JButton rightClick;
+    public JButton leftClick=new JButton("Left");
+    public JButton downClick=new JButton("Down");
+    public JButton upClick=new JButton("Up");
+    public JButton rightClick=new JButton("Right");
     public GameCode game;
     public JPanel scorePanel;
     int score_int;
@@ -28,75 +28,39 @@ class GameFrame extends JFrame implements KeyListener {
     int flag=1;
 
     void gameOver(){
-          String[] options={"New Game","Exit"};
-          int result = JOptionPane.showOptionDialog(this, "Game over.\nYour score was " + game.getScore(), "Game Over!",
-                  JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-          if(result== JOptionPane.YES_OPTION)
-          {
-              newGame();
-          }
-          else
-          {
-              System.exit(0);
-          }
 
-      }
-      void newGame(){
-          String[] options={ "4x4", "5x5", "6x6","8x8"};
-          String choice = (String)JOptionPane.showInputDialog(this, "What size game field?", "New Game",
-                  JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
-          if(choice==null)
-              return;
-          else {
-              if(choice.equals("4x4"))
-              {
-                  System.out.println("called");
-                  game=new GameCode(4,4);
+        String[] options={"New Game","Exit"};
+        int result = JOptionPane.showOptionDialog(this, "Game over.\nYour score was " + game.getScore(), "Game Over!",
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        if(result== JOptionPane.YES_OPTION)
+        {
+            String a = Integer.toString(score_int);
+            File file2 = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
+            try
+            {
+                FileWriter fw = new FileWriter(file2,true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(","+a);
+                bw.newLine();
+                bw.close();
+            }
+            catch (IOException ioException)
+            {
+                ioException.printStackTrace();
+            }
+            dispose();
+            new StartGame().frame.setVisible(true);
+        }
+        else if(result==JOptionPane.NO_OPTION)
+        {
+            System.exit(0);
+        }
+        else {
+            setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        }
 
-              }
-              if(choice.equals("5x5"))
-              {
-                  System.out.println("called");
-                  game=new GameCode(5,5);
+    }
 
-              }
-              if(choice.equals("6x6"))
-              {
-                  System.out.println("called");
-                  game=new GameCode(6,6);
-
-              }
-              if(choice.equals("8x8"))
-              {
-                  System.out.println("called");
-                  game=new GameCode(8,8);
-
-              }
-          }
-          panelGame.removeAll();
-          panelButton.removeAll();
-          panelGame = new GamePanel(game.ROWS, game.COLUMNS);
-          panelMain.add(scorePanel);
-          panelMain.add(panelGame);
-          game.addNew2();
-          game.addNew2();
-          System.out.println();
-          updateNumSquares();
-          panelButton.setLayout(new GridBagLayout());
-          GridBagConstraints constraints = new GridBagConstraints();
-          constraints.gridx = 0; constraints.gridy = 7;
-          panelButton.add(leftClick, constraints);
-          constraints.gridx = 10; constraints.gridy = 7;
-          panelButton.add(rightClick, constraints);
-          constraints.gridx = 5; constraints.gridy = 0;
-          panelButton.add(upClick, constraints);
-          constraints.gridx = 5; constraints.gridy = 15;
-          panelButton.add(downClick, constraints);
-          panelButton.setSize(200,100);
-          panelMain.add(panelButton);
-          pack();
-
-       }
 
     void updateNumSquares () {
 
@@ -118,20 +82,6 @@ class GameFrame extends JFrame implements KeyListener {
         panelGame.repaint();//this line is for repainting the whole grid when a button is clicked.
         if(game.canPlay()==false)
         {
-            String a = Integer.toString(score_int);
-            File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
-            try
-            {
-                FileWriter fw = new FileWriter(file,true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(","+a);
-                bw.newLine();
-                bw.close();
-            }
-            catch (IOException ioException)
-            {
-                ioException.printStackTrace();
-            }
             gameOver();
         }
     }
@@ -166,11 +116,11 @@ class GameFrame extends JFrame implements KeyListener {
             }
             if (code == KeyEvent.VK_RIGHT) {
 
-                    game.slideRight();
-                    game.addNew2();
-                    updateNumSquares();
+                game.slideRight();
+                game.addNew2();
+                updateNumSquares();
 
-                }
+            }
 
         }
     }
@@ -192,22 +142,35 @@ class GameFrame extends JFrame implements KeyListener {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                String[] options={"Exit"};
-                JOptionPane.showMessageDialog(null,"You're Score was "+game.getScore(),"Game Over!",JOptionPane.INFORMATION_MESSAGE);
-                String a = Integer.toString(score_int);
-                File file = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
-                try
-                {
-                    FileWriter fw = new FileWriter(file,true);
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    bw.write(","+a);
-                    bw.newLine();
-                    bw.close();
-                }
-                catch (IOException ioException)
-                {
-                    ioException.printStackTrace();
-                }
+
+                    String[] options = {"Exit"};
+
+                    int result= JOptionPane.showOptionDialog(null, "Game over.\nYour score was " + game.getScore(), "Do you want to exit the Game?",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+                    if (result == JOptionPane.YES_OPTION) {
+
+                        String a = Integer.toString(score_int);
+                        File file2 = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
+                        try
+                        {
+                            FileWriter fw = new FileWriter(file2,true);
+                            BufferedWriter bw = new BufferedWriter(fw);
+                            bw.write(","+a);
+                            bw.newLine();
+                            bw.close();
+                        }
+                        catch (IOException ioException)
+                        {
+                            ioException.printStackTrace();
+                        }
+                        System.exit(0);
+                    } else {
+                        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                    }
+
+
+
             }
 
             @Override
@@ -261,11 +224,9 @@ class GameFrame extends JFrame implements KeyListener {
         panelMain.add(timerlabel);
         score=new JLabel();
         score.setPreferredSize(new Dimension(200,40));
-
         score_int=game.getScore();
         score.setText("Score:  " + score_int);
         NewGame=new JButton("New Game");
-
 
         try {
             //create the font to use. Specify the size!
@@ -300,8 +261,8 @@ class GameFrame extends JFrame implements KeyListener {
         }
         scorePanel=new JPanel(){
 
-                Color c = new Color(129, 0, 174);
-                protected void paintComponent(Graphics g) {
+            Color c = new Color(129, 0, 174);
+            protected void paintComponent(Graphics g) {
                 Paint p = new GradientPaint(0.0f, getHeight(), c,
                         0.0f, 0.0f, Color.BLACK, true);
                 Graphics2D g2d = (Graphics2D) g;
@@ -328,11 +289,44 @@ class GameFrame extends JFrame implements KeyListener {
         upClick.addKeyListener(this);
         downClick.addKeyListener(this);
         //NewGame.addMouseListener(this);
+
         NewGame.addActionListener(new ActionListener() {
+            private Object String;
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                new GameGridSelector().main(new String[0]);
+
+                String[] options = {"Yes"};
+
+                int result= JOptionPane.showOptionDialog(null, "Game over.\nYour score was " + game.getScore(), "Do you want to Start a New Game?",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+                if (result == JOptionPane.YES_OPTION) {
+
+                    String a = Integer.toString(score_int);
+                    File file2 = new File("C:/Users/USER/Desktop/2-2/2048/LeaderBoard1.csv");
+                    try
+                    {
+                        FileWriter fw = new FileWriter(file2,true);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        bw.write(","+a);
+                        bw.newLine();
+                        bw.close();
+                    }
+                    catch (IOException ioException)
+                    {
+                        ioException.printStackTrace();
+                    }
+                    dispose();
+                    new StartGame().frame.setVisible(true);
+
+
+                } else {
+                    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                }
+
+
+
             }
         });
 

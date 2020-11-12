@@ -1,27 +1,19 @@
-import com.opencsv.CSVWriter;
-import javafx.scene.media.MediaPlayer;
-
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import javax.imageio.ImageIO;
-import javax.print.attribute.standard.Media;
 import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 
 public class StartGame implements ActionListener{
 
-    JFrame frame;
-    JButton scoreBoard=new JButton();
+    static JFrame frame;
+    static JButton scoreBoard=new JButton();
 
 
 
@@ -31,7 +23,8 @@ public class StartGame implements ActionListener{
 
     }
 
-    public void go() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+    public static void go() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+
         Clip clip = AudioSystem.getClip();
         clip.open(AudioSystem.getAudioInputStream(new File("Marshmello_-_Summer_Official_Music_Video_with_Lele_Pons (online-audio-converter.com).wav")));
 
@@ -46,7 +39,8 @@ public class StartGame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 try
                 {
-                    clip.start();
+                    //clip.start();
+                    clip.loop(10);
                 }
                 catch (Exception exc)
                 {
@@ -78,17 +72,6 @@ public class StartGame implements ActionListener{
         textField.setPreferredSize(new Dimension(400,30));
         rowPanel.add( name);
         rowPanel.add( textField );
-        String n;
-//        try {
-//            n=textField.getText();
-//            checkForMissingFields( n);
-//
-//        }
-//        catch ( MissingFieldException e) {
-//            // handle exception
-//
-//            textField.setText(e.getMessage());
-//        }
 
         rowPanel.setBackground(Color.black);
         rowPanel2.add( start_music_on );
@@ -142,7 +125,7 @@ public class StartGame implements ActionListener{
         frame.getContentPane().add(BorderLayout.PAGE_END,rowPanel);
         frame.setSize(1200, 800);
         frame.setVisible(true);
-        start_gameButton.addActionListener(this);
+        start_gameButton.addActionListener(null);
         start_gameButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e) {
@@ -180,10 +163,7 @@ public class StartGame implements ActionListener{
         scoreBoard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 new LBoard().main(new String[1]);
-                frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
             }
         });
     }

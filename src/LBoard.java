@@ -118,7 +118,7 @@ public class LBoard extends JPanel {
         // Create and set up the window.
         JFrame frame = new JFrame("Leader Board");
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Create and set up the content pane.
         LBoard newContentPane = new LBoard(){
             Color c = new Color(129, 0, 174);
@@ -135,6 +135,7 @@ public class LBoard extends JPanel {
         // Display the window.
         frame.pack();
         frame.setVisible(true);
+        //frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     class MyModel extends AbstractTableModel {
@@ -149,7 +150,7 @@ public class LBoard extends JPanel {
 
         @Override
         public int getColumnCount() {
-            return columnNames.length;// length;
+            return columnNames.length;
         }
 
         @Override
